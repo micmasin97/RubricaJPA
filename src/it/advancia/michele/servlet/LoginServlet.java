@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.advancia.michele.dao.EMFactoryProvider;
 import it.advancia.michele.model.Account;
 import it.advancia.michele.model.Rubrica;
 
@@ -21,13 +22,6 @@ import it.advancia.michele.model.Rubrica;
 public class LoginServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private EntityManagerFactory emFactory;
-
-	@Override
-	public void init() throws ServletException
-	{
-		emFactory = Persistence.createEntityManagerFactory("RubricaJPA");
-	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
@@ -54,7 +48,7 @@ public class LoginServlet extends HttpServlet
 
 	private int action(String user, String password, String operation)
 	{
-		EntityManager entityManager = emFactory.createEntityManager();
+		EntityManager entityManager = EMFactoryProvider.getEM();
 		entityManager.getTransaction().begin();
 		switch (operation)
 		{
@@ -62,16 +56,19 @@ public class LoginServlet extends HttpServlet
 			Account account = entityManager.find(Account.class, user);
 			if(account==null)
 			{
+				entityManager.close();
 				return 0;
 			}
 			else
 			{
 				if(account.getPassword().equals(password))
 				{
+					entityManager.close();
 					return 1;
 				}
 				else
 				{
+					entityManager.close();
 					return 0;
 				}
 			}

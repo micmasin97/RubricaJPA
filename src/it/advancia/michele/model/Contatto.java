@@ -2,14 +2,31 @@ package it.advancia.michele.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="contatto")
+@Table(name="contatti")
+@SqlResultSetMapping(
+		name="RubricaContattoAccount",
+		entities= {
+				@EntityResult(
+						entityClass=Contatto.class,
+						fields= {
+							@FieldResult(name="id",column="id"),
+							@FieldResult(name="nome",column="nome_contatto"),
+							@FieldResult(name="cognome",column="cognome_contatto"),
+							@FieldResult(name="telefono",column="numero_di_telefono"),
+							@FieldResult(name="rubrica",column="rubrica_id"),
+						
+						})
+		})
 public class Contatto
 {
 	@Id
@@ -20,7 +37,47 @@ public class Contatto
 	@Column(name="cognome_contatto")
 	private String cognome;
 	@Column(name="numero_di_telefono")
-	private String Telefono;
+	private String telefono;
 	@ManyToOne
 	private Rubrica rubrica;
+	public int getId()
+	{
+		return id;
+	}
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+	public String getNome()
+	{
+		return nome;
+	}
+	public void setNome(String nome)
+	{
+		this.nome = nome;
+	}
+	public String getCognome()
+	{
+		return cognome;
+	}
+	public void setCognome(String cognome)
+	{
+		this.cognome = cognome;
+	}
+	public String getTelefono()
+	{
+		return telefono;
+	}
+	public void setTelefono(String telefono)
+	{
+		this.telefono = telefono;
+	}
+	public Rubrica getRubrica()
+	{
+		return rubrica;
+	}
+	public void setRubrica(Rubrica rubrica)
+	{
+		this.rubrica = rubrica;
+	}
 }
