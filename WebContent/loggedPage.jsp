@@ -69,11 +69,31 @@
 		%>
 		</tbody>
 		</table>
+		Creazione_contatto
 		<form action="ContattiServlet" method="post">
-		<input type="text" name="createNome">
-		<input type="text" name="createCognome">
-		<input type="text" name="createNumero">
-		<input type="submit" name="submit" value="create">
+			<input type="text" name="createNome" placeholder="Nome">
+			<input type="text" name="createCognome" placeholder="Cognome">
+			<input type="text" name="createNumero" placeholder="Numero di telefono">
+			<input type="submit" name="submit" value="create">
+		</form>
+		Ricerca_contatto
+		<form action="ContattiServlet" method="post">
+			<input type="text" name="searchNome" placeholder="Nome">
+			<input type="text" name="searchCognome" placeholder="Cognome">
+			<input type="submit" name="submit" value="search">
+		</form>
+		Elimina_contatto
+		<form action="ContattiServlet" method="post">
+			<input type="number" name="deleteId" placeholder="id">
+			<input type="submit" name="submit" value="delete">
+		</form>
+		Modifica_contatto
+		<form action="ContattiServlet" method="post">
+			<input type="number" name="updateId" placeholder="id">
+			<input type="text" name="updateNome" placeholder="Nome">
+			<input type="text" name="updateCognome" placeholder="Cognome">
+			<input type="text" name="updateNumero" placeholder="Numero di telefono">
+			<input type="submit" name="submit" value="update">
 		</form>
 	</body>
 	</html>
