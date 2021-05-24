@@ -12,13 +12,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table
+@XmlTransient
 public class Rubrica
 {
 	@Id@GeneratedValue(strategy=GenerationType.AUTO)
-	public long id;
+	private long id;
 	@Column(name="contatti")
 	@OneToMany(mappedBy="id",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	private List<Contatto> contatti;

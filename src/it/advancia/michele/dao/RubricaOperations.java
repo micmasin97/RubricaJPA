@@ -68,11 +68,14 @@ public class RubricaOperations
 		EntityManager entityManager = EMFactoryProvider.getEM();		
 		entityManager.getTransaction().begin();
 		Contatto contatto = entityManager.find(Contatto.class,id);
+		if(entityManager.find(Account.class,user).getRubrica()==contatto.getRubrica())
+		{
 		contatto.setNome(nome);
 		contatto.setCognome(cognome);
 		contatto.setTelefono(numero);
 		entityManager.persist(contatto);
 		entityManager.getTransaction().commit();
+		}
 		entityManager.close();
 	}
 }

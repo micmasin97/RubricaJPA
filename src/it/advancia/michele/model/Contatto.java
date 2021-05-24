@@ -12,6 +12,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 @Entity
 @Table(name="contatti")
@@ -29,6 +32,8 @@ import javax.persistence.Table;
 						
 						})
 		})
+@XmlRootElement(name="Contatto")
+@XmlType(propOrder = {"id","cognome","nome","telefono"})
 public class Contatto
 {
 	@Id
@@ -74,6 +79,7 @@ public class Contatto
 	{
 		this.telefono = telefono;
 	}
+	@XmlTransient
 	public Rubrica getRubrica()
 	{
 		return rubrica;
