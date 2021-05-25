@@ -13,50 +13,61 @@ import it.advancia.michele.dao.RubricaOperations;
 import it.advancia.michele.model.Contatto;
 
 @WebServlet("/ContattiServlet")
-public class ContattiServlet extends HttpServlet {
+public class ContattiServlet extends HttpServlet
+{
 	private static final long serialVersionUID = 1L;
-  
-    public ContattiServlet() {
-        super();
-    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//response.getWriter().append("Get").append(request.getContextPath());
-	}
+	private static final String SUCCESS_PAGE = "loggedPage.jsp";
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		actions(request, response);
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		try
+		{
+			actions(request, response);
+		} catch (Exception e)
+		{
+			try
+			{
+				request.setAttribute("error", e.getMessage());
+				request.getRequestDispatcher("/error.jsp").forward(request, response);
+			} catch (ServletException | IOException ex)
+			{
+				ex.printStackTrace();
+			}
+
+		}
 	}
 
 	private void actions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		String operations = request.getParameter("submit");
-		String user = (String)request.getSession().getAttribute("login");
+		String user = (String) request.getSession().getAttribute("login");
 		switch (operations)
 		{
 		case "show":
 			List<Contatto> contatti = RubricaOperations.showContact(user);
 			request.setAttribute("list", contatti);
-			request.getRequestDispatcher("loggedPage.jsp").forward(request, response);
+			request.getRequestDispatcher(SUCCESS_PAGE).forward(request, response);
 			break;
 		case "create":
 			String nome = request.getParameter("createNome");
 			String cognome = request.getParameter("createCognome");
 			String numero = request.getParameter("createNumero");
 			RubricaOperations.createContact(user, nome, cognome, numero);
-			request.getRequestDispatcher("loggedPage.jsp").forward(request, response);
+			request.getRequestDispatcher(SUCCESS_PAGE).forward(request, response);
 			break;
 		case "search":
 			nome = request.getParameter("searchNome");
 			cognome = request.getParameter("searchCognome");
 			contatti = RubricaOperations.searchContact(user, nome, cognome);
 			request.setAttribute("list", contatti);
-			request.getRequestDispatcher("loggedPage.jsp").forward(request, response);
+			request.getRequestDispatcher(SUCCESS_PAGE).forward(request, response);
 			break;
 		case "delete":
 			int id = Integer.parseInt(request.getParameter("deleteId"));
 			RubricaOperations.deleteContact(user, id);
-			request.getRequestDispatcher("loggedPage.jsp").forward(request, response);
+			request.getRequestDispatcher(SUCCESS_PAGE).forward(request, response);
 			break;
 		case "update":
 			id = Integer.parseInt(request.getParameter("updateId"));
@@ -64,10 +75,11 @@ public class ContattiServlet extends HttpServlet {
 			cognome = request.getParameter("updateCognome");
 			numero = request.getParameter("updateNumero");
 			RubricaOperations.updateContact(user, id, nome, cognome, numero);
-			request.getRequestDispatcher("loggedPage.jsp").forward(request, response);
+			request.getRequestDispatcher(SUCCESS_PAGE).forward(request, response);
 			break;
+		default:
+			return;
 		}
 	}
-	
 
 }

@@ -2,6 +2,6 @@
 <endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">   
   <endpoint
      name="ContactService"
-     implementation="it.advancia.michele.service.ContactService"
+     implementation="it.advancia.michele.soapService.ContactService"
      url-pattern="/ws/contact"/> 
 </endpoints>

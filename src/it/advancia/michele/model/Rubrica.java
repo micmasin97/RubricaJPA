@@ -19,29 +19,33 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlTransient
 public class Rubrica
 {
-	@Id@GeneratedValue(strategy=GenerationType.AUTO)
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@Column(name="contatti")
-	@OneToMany(mappedBy="id",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@Column(name = "contatti")
+	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Contatto> contatti;
-	
+
 	public Rubrica()
 	{
-		contatti=new ArrayList<Contatto>();
+		contatti = new ArrayList<>();
 	}
-	
+
 	public long getId()
 	{
 		return id;
 	}
+
 	public void setId(long id)
 	{
 		this.id = id;
 	}
+
 	public List<Contatto> getContatti()
 	{
 		return contatti;
 	}
+
 	public void setContatti(List<Contatto> contatti)
 	{
 		this.contatti = contatti;

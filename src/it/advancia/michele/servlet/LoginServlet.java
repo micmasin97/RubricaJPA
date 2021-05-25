@@ -3,8 +3,6 @@ package it.advancia.michele.servlet;
 import java.io.IOException;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,28 +19,64 @@ import it.advancia.michele.model.Rubrica;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet
 {
+	private static final String LOGGED_PAGE_JSP = "/loggedPage.jsp";
+	private static final String ERROR_JSP = "/error.jsp";
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		request.getRequestDispatcher("/error.jsp").forward(request, response);
+		try
+		{
+			request.getRequestDispatcher(ERROR_JSP).forward(request, response);
+		} catch (ServletException | IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		String user = request.getParameter("user");
 		String password = request.getParameter("password");
 		String operation = request.getParameter("submit");
 		int results = action(user, password, operation);
-		if(results==1)
+		try
 		{
-			request.getSession().setAttribute("login", user);
-			request.getRequestDispatcher("/loggedPage.jsp").forward(request, response);
-		}
-		else
+			if (results == 1)
+			{
+				request.getSession().setAttribute("login", user);
+				request.getRequestDispatcher(LOGGED_PAGE_JSP).forward(request, response);
+			} else
+			{
+				switch (results)
+				{
+				case -1:
+					request.setAttribute("error", "username inesistente");
+					break;
+				case -2:
+					request.setAttribute("error", "password errata");
+					break;
+				case -3:
+					request.setAttribute("error", "username già presente");
+					break;
+				default:
+					request.setAttribute("error", "errore di sistema");
+					break;
+				}
+				request.getRequestDispatcher(ERROR_JSP).forward(request, response);
+			}
+		} catch (Exception e)
 		{
-			request.setAttribute("error", "login o password falliti(in futuro saranno disponibili ulteriori informazioni)");
-			request.getRequestDispatcher("/error.jsp").forward(request, response);
+			try
+			{
+				request.setAttribute("error", e.getMessage());
+				request.getRequestDispatcher(ERROR_JSP).forward(request, response);
+			} catch (ServletException | IOException ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 	}
 
@@ -54,27 +88,25 @@ public class LoginServlet extends HttpServlet
 		{
 		case "login":
 			Account account = entityManager.find(Account.class, user);
-			if(account==null)
+			if (account == null)
 			{
 				entityManager.close();
-				return 0;
-			}
-			else
+				return -1;
+			} else
 			{
-				if(account.getPassword().equals(password))
+				if (account.getPassword().equals(password))
 				{
 					entityManager.close();
 					return 1;
-				}
-				else
+				} else
 				{
 					entityManager.close();
-					return 0;
+					return -2;
 				}
 			}
 		case "register":
 			account = entityManager.find(Account.class, user);
-			if(account==null)
+			if (account == null)
 			{
 				account = new Account();
 				account.setUsername(user);
@@ -86,13 +118,14 @@ public class LoginServlet extends HttpServlet
 				entityManager.getTransaction().commit();
 				entityManager.close();
 				return 1;
-			}
-			else
+			} else
 			{
 				entityManager.close();
-				return 0;
+				return -3;
 			}
+		default:
+			return 0;
 		}
-		return 0;
+
 	}
 }
