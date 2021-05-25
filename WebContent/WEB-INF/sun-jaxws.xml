@@ -3,9 +3,5 @@
   <endpoint
      name="ContactService"
      implementation="it.advancia.michele.service.ContactService"
-     url-pattern="/ws/contact"/>    
-     <endpoint
-     name="WsAuthImpl"
-     implementation="it.advancia.michele.service.WsAuthImpl"
-     url-pattern="/ws/auth"/>    
+     url-pattern="/ws/contact"/> 
 </endpoints>
