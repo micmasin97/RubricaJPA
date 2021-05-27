@@ -28,11 +28,11 @@ public class LoginFilter implements ContainerRequestFilter
 		String path = requestContext.getUriInfo().getPath();
 		String user = path.split("/")[0];
 		List<String> authHeader = requestContext.getHeaders().get(AUTHORIZATION_HEADER_KEY);
-		if (authHeader != null && authHeader.isEmpty())
+		if (authHeader != null && !authHeader.isEmpty())
 		{
 			// se authheader contiene qualcosa
 			String authToken = authHeader.get(0);
-			// rimuovo la stringa token(così da avere poi solo la parte codificata)
+			// rimuovo la stringa token(cosÃ¬ da avere poi solo la parte codificata)
 			authToken = authToken.replaceFirst(AUTHORIZATION_HEADER_PREFIX, "");
 			// e la decodifico
 			String decodedString = Base64.decodeAsString(authToken);
